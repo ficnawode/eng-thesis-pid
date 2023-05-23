@@ -86,8 +86,8 @@ private:
 };
 
 void print_mismatch(int tof_pid, int custom_pid) {
-  cout << "mismatch: tof pid: " << tof_pid << " | custom_pid: " << custom_pid
-       << '\n';
+  // cout << "mismatch: tof pid: " << tof_pid << " | custom_pid: " << custom_pid
+  //  << '\n';
 }
 
 void launch_pid() {
@@ -244,7 +244,7 @@ void launch_pid() {
       switch (tof_pdg) {
       case 2212: // protons
         if (tof_qp_tof < 2 && tof_mass2 < 0.6)
-          continue;
+          goto default;
         if (tof_qp_tof < 4 && tof_mass2 < 0.4)
           continue;
         if (tof_qp_tof < 6 && tof_mass2 < 0.2)
