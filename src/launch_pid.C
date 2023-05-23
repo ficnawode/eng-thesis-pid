@@ -85,7 +85,12 @@ private:
   TH2F *_h_other;
 };
 
-void test_pid() {
+void print_mismatch(int tof_pid, int custom_pid) {
+  cout << "mismatch: tof pid: " << tof_pid << " | custom_pid: " << custom_pid
+       << '\n';
+}
+
+void launch_pid() {
 
   AnalysisTree::Chain *treeIn = new AnalysisTree::Chain(
       std::vector<std::string>({"fileslist_verify.txt"}),
@@ -198,6 +203,14 @@ void test_pid() {
       if (tof2sim_id < 0 || vtx2sim_id < 0)
         continue;
 
+      // assert that pdg from vtx is the same as the one from tof,
+      // we get less data this way but it makes more sense this way and the
+      // identification is more exact.
+      const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
+      const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
+      if (tof_pdg != vtx_pdg)
+        continue;
+
       // get my pid
       static PID pid;
       int pid_pdg = (int)pid.identify_particle(tof_qp_tof, tof_mass2);
@@ -228,13 +241,6 @@ void test_pid() {
         all_identified_other++;
       }
 
-      // match track to proton
-      const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
-      const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
-
-      if (tof_pdg != vtx_pdg)
-        continue;
-
       switch (tof_pdg) {
       case 2212: // protons
         if (tof_qp_tof < 2 && tof_mass2 < 0.6)
@@ -252,17 +258,23 @@ void test_pid() {
         hc_qp_mass2_protons_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_proton++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
         break;
       case 321:
         if (tof_qp_tof > 2 && tof_mass2 > 0.14)
           hc_qp_mass2_kaon_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_k_plus++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
         break;
       case -321:
         hc_qp_mass2_kaon_minus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_k_minus++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
         break;
       case 211:
         if (tof_qp_tof < 5 && tof_mass2 > 0.4)
@@ -274,6 +286,8 @@ void test_pid() {
         hc_qp_mass2_pion_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_plus++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
         break;
       case -211:
         if (tof_qp_tof > -5 && tof_mass2 > 0.4)
@@ -285,11 +299,15 @@ void test_pid() {
         hc_qp_mass2_pion_minus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_minus++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
         break;
       default:
         hc_qp_mass2_others_pid.Fill(tof_qp_tof, tof_mass2);
-        if (tof_pdg == pid_pdg)
+        if (pid_pdg == -1)
           correctly_identified_other++;
+        else
+          print_mismatch(tof_pdg, pid_pdg);
       }
     }
   }
@@ -342,19 +360,19 @@ void test_pid() {
 
   hc_qp_mass2.Write();
 
-  hc_qp_mass2_protons_pid.Write();
-  hc_qp_mass2_kaon_plus_pid.Write();
-  hc_qp_mass2_kaon_minus_pid.Write();
-  hc_qp_mass2_pion_plus_pid.Write();
-  hc_qp_mass2_pion_minus_pid.Write();
-  hc_qp_mass2_others_pid.Write();
-
   hc_qp_mass2_protons.Write();
   hc_qp_mass2_kaon_plus.Write();
   hc_qp_mass2_kaon_minus.Write();
   hc_qp_mass2_pion_plus.Write();
   hc_qp_mass2_pion_minus.Write();
   hc_qp_mass2_others.Write();
+
+  hc_qp_mass2_protons_pid.Write();
+  hc_qp_mass2_kaon_plus_pid.Write();
+  hc_qp_mass2_kaon_minus_pid.Write();
+  hc_qp_mass2_pion_plus_pid.Write();
+  hc_qp_mass2_pion_minus_pid.Write();
+  hc_qp_mass2_others_pid.Write();
 
   fileOut->Close();
 }
