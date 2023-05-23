@@ -69,6 +69,8 @@ void generate_histograms() {
 
       if (tof2sim_id < 0 || vtx2sim_id < 0)
         continue;
+      if (tof2sim_id != vtx2sim_id)
+        continue;
       // match track to proton
       const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
       const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();

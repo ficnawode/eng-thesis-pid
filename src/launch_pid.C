@@ -85,11 +85,6 @@ private:
   TH2F *_h_other;
 };
 
-void print_mismatch(int tof_pid, int custom_pid) {
-  // cout << "mismatch: tof pid: " << tof_pid << " | custom_pid: " << custom_pid
-  //  << '\n';
-}
-
 void launch_pid() {
 
   AnalysisTree::Chain *treeIn = new AnalysisTree::Chain(
@@ -118,59 +113,57 @@ void launch_pid() {
       treeConfig->GetBranchConfig("TofHits").GetFieldId("qp_tof");
 
   // declare histograms
-  TH2F hc_qp_mass2("hc_qp_mass2",
-                   "correlation qp_tof mass2; sign(q)*p (GeV/c);mass^2 (GeV)^2",
+  TH2F hc_qp_mass2("hc_qp_mass2", "TOF plot; sign(q)*p (GeV/c);mass^2 (GeV)^2",
                    700, -12, 12, 700, -2, 3);
   TH2F hc_qp_mass2_protons("hc_qp_mass2 protons pid",
-                           "correlation qp_tof mass2 protons  pid; "
+                           "TOF plot protons  pid; "
                            "sign(q)*p (GeV/c);mass^2 (GeV)^2",
                            700, 0, 12, 700, -1.8, 3.2);
   TH2F hc_qp_mass2_pion_plus(
       "hc_qp_mass2 pi+ pid",
-      "correlation qp_tof mass2 pi +  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, 0, 10, 700, -1, 1);
+      "TOF plot pi +  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, 0, 10, 700,
+      -1, 1);
   TH2F hc_qp_mass2_pion_minus(
       "hc_qp_mass2 pi-  pid",
-      "correlation qp_tof mass2 pi-  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, -10, 0, 700, -1, 1);
+      "TOF plot pi-  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, -10, 0, 700,
+      -1, 1);
   TH2F hc_qp_mass2_kaon_plus(
       "hc_qp_mass2 K+  pid",
-      "correlation qp_tof mass2 K+  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700,
-      0, 10, 700, -0.8, 1);
+      "TOF plot K+  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, 0, 10, 700,
+      -0.8, 1);
   TH2F hc_qp_mass2_kaon_minus(
       "hc_qp_mass2 K-  pid",
-      "correlation qp_tof mass2 K-  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700,
-      -10, 0, 700, -0.8, 1);
+      "TOF plot K-  pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, -10, 0, 700,
+      -0.8, 1);
 
   TH2F hc_qp_mass2_others("hc_qp_mass2 others  pid",
-                          "correlation qp_tof mass2 other particles  pid; "
+                          "TOF plot other particles  pid; "
                           "sign(q)*p (GeV/c);mass^2 (GeV)^2",
                           700, -12, 12, 700, -2, 5);
   TH2F hc_qp_mass2_protons_pid("hc_qp_mass2 protons sim pid",
-                               "correlation qp_tof mass2 protons sim pid; "
+                               "TOF plot protons sim pid; "
                                "sign(q)*p (GeV/c);mass^2 (GeV)^2",
                                700, 0, 12, 700, -1.8, 3.2);
   TH2F hc_qp_mass2_pion_plus_pid(
       "hc_qp_mass2 pi+ sim pid",
-      "correlation qp_tof mass2 pi + sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, 0, 10, 700, -1, 1);
+      "TOF plot pi + sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, 0, 10,
+      700, -1, 1);
   TH2F hc_qp_mass2_pion_minus_pid(
       "hc_qp_mass2 pi- sim pid",
-      "correlation qp_tof mass2 pi- sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, -10, 0, 700, -1, 1);
+      "TOF plot pi- sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, -10, 0,
+      700, -1, 1);
   TH2F hc_qp_mass2_kaon_plus_pid(
       "hc_qp_mass2 K+ sim pid",
-      "correlation qp_tof mass2 K+ sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, 0, 10, 700, -0.8, 1);
+      "TOF plot K+ sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, 0, 10, 700,
+      -0.8, 1);
   TH2F hc_qp_mass2_kaon_minus_pid(
       "hc_qp_mass2 K- sim pid",
-      "correlation qp_tof mass2 K- sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, -10, 0, 700, -0.8, 1);
-  TH2F hc_qp_mass2_others_pid(
-      "hc_qp_mass2 others sim pid",
-      "correlation qp_tof mass2 other particles sim pid; "
-      "sign(q)*p (GeV/c);mass^2 (GeV)^2",
-      700, -12, 12, 700, -2, 5);
+      "TOF plot K- sim pid; sign(q)*p (GeV/c);mass^2 (GeV)^2", 700, -10, 0, 700,
+      -0.8, 1);
+  TH2F hc_qp_mass2_others_pid("hc_qp_mass2 others sim pid",
+                              "TOF plot other particles sim pid; "
+                              "sign(q)*p (GeV/c);mass^2 (GeV)^2",
+                              700, -12, 12, 700, -2, 5);
 
   int correctly_identified_proton = 0;
   int all_identified_proton = 0;
@@ -185,7 +178,6 @@ void launch_pid() {
   int correctly_identified_other = 0;
   int all_identified_other = 0;
 
-  // fill histograms
   for (int i = 0; i < NEvents; i++) {
     treeIn->GetEntry(i);
 
@@ -242,9 +234,9 @@ void launch_pid() {
       }
 
       switch (tof_pdg) {
-      case 2212: // protons
+      case 2212:
         if (tof_qp_tof < 2 && tof_mass2 < 0.6)
-          goto default;
+          continue;
         if (tof_qp_tof < 4 && tof_mass2 < 0.4)
           continue;
         if (tof_qp_tof < 6 && tof_mass2 < 0.2)
@@ -258,23 +250,17 @@ void launch_pid() {
         hc_qp_mass2_protons_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_proton++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
         break;
       case 321:
         if (tof_qp_tof > 2 && tof_mass2 > 0.14)
           hc_qp_mass2_kaon_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_k_plus++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
         break;
       case -321:
         hc_qp_mass2_kaon_minus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_k_minus++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
         break;
       case 211:
         if (tof_qp_tof < 5 && tof_mass2 > 0.4)
@@ -286,8 +272,6 @@ void launch_pid() {
         hc_qp_mass2_pion_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_plus++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
         break;
       case -211:
         if (tof_qp_tof > -5 && tof_mass2 > 0.4)
@@ -299,15 +283,11 @@ void launch_pid() {
         hc_qp_mass2_pion_minus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_minus++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
         break;
       default:
         hc_qp_mass2_others_pid.Fill(tof_qp_tof, tof_mass2);
         if (pid_pdg == -1)
           correctly_identified_other++;
-        else
-          print_mismatch(tof_pdg, pid_pdg);
       }
     }
   }
@@ -346,18 +326,7 @@ void launch_pid() {
        << (float)correctly_identified_other / (float)all_identified_other
        << "\n";
 
-  // Normalize histograms
-  //   hc_qp_mass2.Scale(1. / hc_qp_mass2.Integral());
-  //   hc_qp_mass2_protons.Scale(1. / hc_qp_mass2_protons.Integral());
-  //   hc_qp_mass2_kaon_plus.Scale(1. / hc_qp_mass2_kaon_minus.Integral());
-  //   hc_qp_mass2_kaon_minus.Scale(1. / hc_qp_mass2_kaon_minus.Integral());
-  //   hc_qp_mass2_pion_plus.Scale(1. / hc_qp_mass2_pion_plus.Integral());
-  //   hc_qp_mass2_pion_minus.Scale(1. / hc_qp_mass2_pion_minus.Integral());
-  //   hc_qp_mass2_others.Scale(1. / hc_qp_mass2_others.Integral());
-
-  // write to histograms
   fileOut->cd();
-
   hc_qp_mass2.Write();
 
   hc_qp_mass2_protons.Write();
