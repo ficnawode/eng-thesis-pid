@@ -194,14 +194,16 @@ void launch_pid() {
 
       if (tof2sim_id < 0 || vtx2sim_id < 0)
         continue;
+      if (tof2sim_id != vtx2sim_id)
+        continue;
 
       // assert that pdg from vtx is the same as the one from tof,
       // we get less data this way but it makes more sense this way and the
       // identification is more exact.
       const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
-      const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
-      if (tof_pdg != vtx_pdg)
-        continue;
+      // const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
+      // if (tof_pdg != vtx_pdg)
+      //   continue;
 
       // get my pid
       static PID pid;

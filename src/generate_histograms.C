@@ -73,10 +73,10 @@ void generate_histograms() {
         continue;
       // match track to proton
       const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
-      const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
+      // const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
 
-      if (tof_pdg != vtx_pdg)
-        continue;
+      // if (tof_pdg != vtx_pdg)
+      // continue;
 
       switch (tof_pdg) {
       case 2212: // protons
