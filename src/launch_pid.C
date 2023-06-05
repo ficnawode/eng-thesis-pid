@@ -1,6 +1,3 @@
-
-#include <memory>
-
 enum class PDG {
   Proton = 2212,
   K_plus = 321,
@@ -27,14 +24,7 @@ public:
     assert(_h_pi_minus != NULL);
     assert(_h_pi_other != NULL);
   }
-  ~PID() {
-    _hist_in->Close();
-    delete _h_proton;
-    delete _h_k_plus;
-    delete _h_k_minus;
-    delete _h_pi_plus;
-    delete _h_pi_minus;
-  }
+  ~PID() { _hist_in->Close(); }
 
   PDG identify_particle(float qp, float mass2) {
     std::map<PDG, float> p_map;
@@ -48,6 +38,7 @@ public:
         std::make_pair(PDG::Pi_plus, _interpolate(_h_pi_plus, qp, mass2)));
     p_map.insert(
         std::make_pair(PDG::Pi_minus, _interpolate(_h_pi_minus, qp, mass2)));
+    p_map.insert(std::make_pair(PDG::Other, _interpolate(_h_other, qp, mass2)));
     return _find_most_likely_particle(p_map);
   }
 
@@ -197,13 +188,7 @@ void launch_pid() {
       if (tof2sim_id != vtx2sim_id)
         continue;
 
-      // assert that pdg from vtx is the same as the one from tof,
-      // we get less data this way but it makes more sense this way and the
-      // identification is more exact.
       const int tof_pdg = sim_tracks->GetChannel(tof2sim_id).GetPid();
-      // const int vtx_pdg = sim_tracks->GetChannel(vtx2sim_id).GetPid();
-      // if (tof_pdg != vtx_pdg)
-      //   continue;
 
       // get my pid
       static PID pid;
@@ -237,25 +222,12 @@ void launch_pid() {
 
       switch (tof_pdg) {
       case 2212:
-        if (tof_qp_tof < 2 && tof_mass2 < 0.6)
-          continue;
-        if (tof_qp_tof < 4 && tof_mass2 < 0.4)
-          continue;
-        if (tof_qp_tof < 6 && tof_mass2 < 0.2)
-          continue;
-        if (tof_qp_tof < 4 && tof_mass2 > 1.4)
-          continue;
-        if (tof_qp_tof < 6 && tof_mass2 > 1.6)
-          continue;
-        if (tof_qp_tof < 8 && tof_mass2 > 2.2)
-          continue;
         hc_qp_mass2_protons_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_proton++;
         break;
       case 321:
-        if (tof_qp_tof > 2 && tof_mass2 > 0.14)
-          hc_qp_mass2_kaon_plus_pid.Fill(tof_qp_tof, tof_mass2);
+        hc_qp_mass2_kaon_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_k_plus++;
         break;
@@ -265,23 +237,11 @@ void launch_pid() {
           correctly_identified_k_minus++;
         break;
       case 211:
-        if (tof_qp_tof < 5 && tof_mass2 > 0.4)
-          continue;
-        if (tof_qp_tof < 3 && tof_mass2 > 0.2)
-          continue;
-        if (tof_qp_tof < 1 && tof_mass2 > 0.1)
-          continue;
         hc_qp_mass2_pion_plus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_plus++;
         break;
       case -211:
-        if (tof_qp_tof > -5 && tof_mass2 > 0.4)
-          continue;
-        if (tof_qp_tof > -3 && tof_mass2 > 0.2)
-          continue;
-        if (tof_qp_tof > -1 && tof_mass2 > 0.1)
-          continue;
         hc_qp_mass2_pion_minus_pid.Fill(tof_qp_tof, tof_mass2);
         if (tof_pdg == pid_pdg)
           correctly_identified_pi_minus++;
